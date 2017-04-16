@@ -1,0 +1,103 @@
+---
+title: "Introduction to NOAAeq"
+author: "L.S."
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to NOAAeq}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The `NOAAeq` package analyses data from the [Significant Earthquake Database](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1) of the U.S. National Oceanographic and Atmospheric Administration (NOAA). This dataset contains information about 5,933 earthquakes over an approximately 4,000 year time span.
+
+```{r setup, include=FALSE}
+require("knitr")
+require("NOAAeq")
+require("magrittr")
+opts_knit$set(root.dir = system.file("extdata", package = "NOAAeq"))
+```
+
+```{r data, include=FALSE}
+data <- readr::read_delim(file = "earthquakes.tsv.gz", delim = "\t")
+```
+
+## Clean location names
+
+Location names can be cleaned to ensure a nice display as labels in timeline plots and maps.
+
+```{r location, echo=TRUE}
+eq_location_clean(c("MEXICO:  MICHOACAN",
+                    "SWITZERLAND:  BASEL",
+                    "THAILAND:  BANGKOK"))
+```
+
+This function is called within the `eq_clean_data` function.
+
+## Clean data
+
+Timelines need information on dates. Therefore, temporal information, such as year, month, and day, have to be united and converted to a date format. In addition, several columns have to be converted to numeric to ensure their usability in plotting functions.
+
+```{r clean, echo=TRUE}
+data %>%
+  eq_clean_data()
+```
+
+## Display timelines
+
+Timelines visualize temporal information. Each point symbol represents one earthquake. Additional information about the earthquakes can be displayed as the size or colour of the point symbols.
+
+```{r timeline1, echo=TRUE, fig.width=7, fig.height=2}
+data %>%
+ eq_clean_data() %>%
+ dplyr::filter(lubridate::year(DATE) %in% 2000:2017 & COUNTRY == "USA") %>%
+ ggplot(aes(x = DATE, size = EQ_PRIMARY, fill = TOTAL_DEATHS)) +
+ geom_timeline() +
+ theme_classic() +
+ theme(legend.position = "bottom") +
+ scale_size_continuous(name = "Richter scale value") +
+ scale_fill_continuous(name = "# deaths") +
+ guides(size = guide_legend(order = 1),
+        fill = guide_colourbar(order = 2))
+```
+
+## Display stratified timelines with labels
+
+Adding labels to the earthquakes allows to identify them. For better readability, it is recommended to limit the number labels to earthquakes of special interest.
+Furthermore, the timelines of multiple groups (e.g. countries) can easily be compared by stratification.
+
+```{r timeline2, echo=TRUE, fig.width=7, fig.height=6}
+data %>%
+ eq_clean_data() %>%
+ dplyr::filter(lubridate::year(DATE) %in% 2000:2017 & COUNTRY %in% c("USA", "CHINA")) %>%
+ ggplot(aes(x = DATE, y = COUNTRY, fill = TOTAL_DEATHS)) +
+ geom_timeline() +
+ geom_timeline_label(aes(label = LOCATION_NAME, col_max = EQ_PRIMARY), n_max = 5) +
+ theme_classic() +
+ theme(legend.position = "bottom",
+       axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
+ scale_fill_continuous(name = "# deaths", breaks = c(1, 87652))
+```
+
+## Map earthquakes
+
+Besides visualizing the earthquakes in time, it’s important that we can visualize them in space. An interactive map additionally allows to click on earthquake markers and retrieve further information from a pop-up window.
+
+```{r map1, echo=TRUE, fig.width=5, fig.height=5}
+data %>%
+ eq_clean_data() %>%
+ dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>%
+ eq_map(annot_col = "DATE")
+```
+
+## Provide additional information in pop-up windows
+
+The information provided in the pop-up window can be further customized.
+
+```{r map2, echo=TRUE, fig.width=5, fig.height=5}
+data %>%
+ eq_clean_data() %>%
+ dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>%
+ dplyr::mutate(popup_text = eq_create_label(.)) %>%
+ eq_map(annot_col = "popup_text")
+```

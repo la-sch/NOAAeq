@@ -1,0 +1,18 @@
+Package: NOAAeq
+Type: Package
+Title: Analysis of earthquakes
+Version: 0.1.0
+Author: L.S.
+Maintainer: L.S. <ls@somewhere.net>
+Description: Temporal and spatial analysis of earthquake data from the NOAA
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/la-sch/NOAAeq
+Depends: ggplot2
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
+Imports: magrittr
