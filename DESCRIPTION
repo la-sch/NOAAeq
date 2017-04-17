@@ -4,7 +4,7 @@ Title: Analysis of earthquakes
 Version: 0.1.0
 Author: L.S.
 Maintainer: L.S. <ls@somewhere.net>
-Description: Temporal and spatial analysis of earthquake data from the NOAA
+Description: Temporal and spatial analysis of earthquake data from the NOAA.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

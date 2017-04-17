@@ -9,19 +9,24 @@ geom_timeline_label(mapping = NULL, data = NULL, stat = "identity",
   inherit.aes = TRUE, ...)
 }
 \arguments{
-\item{x}{A vector of dates.}
+\item{mapping}{Set of aesthetic mappings created by \code{aes} or \code{aes_}.
+If specified and \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+at the top level of the plot. You must supply mapping if there is no plot mapping.}
 
-\item{label}{A character vector, e.g. the column \code{LOCATION_NAME}}
+\item{stat}{The statistical transformation to use on the data for this layer, as a string.}
 
-\item{n_max}{(optional) An integer value indicating the maximum number of labels per timeline.
-The \code{n_max} highest values of \code{col_max} will be selected.}
+\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.}
 
-\item{col_max}{(optional) The column based on which the \code{n_max} highest values will be selected.}
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning.
+If \code{TRUE}, missing values are silently removed.}
 
-\item{y}{(optional) A factor indicating some stratification in which case
-multiple time lines will be plotted for each level of the factor (e.g. country).}
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.}
 
-\item{colour}{(optional) A colour used for colouring the vertical lines leading to the label.}
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them.}
+
+\item{...}{other arguments passed on to \code{layer}.
+These are often aesthetics, used to set an aesthetic to a fixed value.}
 }
 \value{
 Timeline labels are added to a timeline plot.
@@ -32,20 +37,17 @@ It is usually used together with the \code{geom_timeline} function.
 }
 \examples{
 # stratification and text annotations as in figure 3 of module 2
-pckg <- getwd()
-file <- grep("earthquakes.tsv.gz",
-             list.files(path = pckg, all.files = TRUE, full.names = TRUE, recursive = TRUE),
-            value = TRUE)
-
+file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
 readr::read_delim(file = file, delim = "\\t") \%>\%
   eq_clean_data() \%>\%
-  dplyr::filter(lubridate::year(DATE) \%in\% 2000:2017 & COUNTRY \%in\% c("USA", "CHINA") \%>\%
+  dplyr::filter(lubridate::year(DATE) \%in\% 2000:2017 & COUNTRY \%in\% c("USA", "CHINA")) \%>\%
   ggplot(aes(x = DATE, y = COUNTRY, fill = TOTAL_DEATHS)) +
   geom_timeline() +
   geom_timeline_label(aes(label = LOCATION_NAME, col_max = EQ_PRIMARY), n_max = 5) +
   theme_classic() +
   theme(legend.position = "bottom",
-        axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
+        axis.title.y = element_blank(), axis.ticks.y = element_blank(),
+        axis.line.y = element_blank()) +
   scale_fill_continuous(name = "# deaths", breaks = c(1, 87652))
 
 }

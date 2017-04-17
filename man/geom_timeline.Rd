@@ -9,21 +9,24 @@ geom_timeline(mapping = NULL, data = NULL, stat = "identity",
   inherit.aes = TRUE, ...)
 }
 \arguments{
-\item{x}{A vector of dates.}
+\item{mapping}{Set of aesthetic mappings created by \code{aes} or \code{aes_}.
+If specified and \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+at the top level of the plot. You must supply mapping if there is no plot mapping.}
 
-\item{y}{(optional) A factor indicating some stratification in which case
-multiple time lines will be plotted for each level of the factor (e.g. country).}
+\item{stat}{The statistical transformation to use on the data for this layer, as a string.}
 
-\item{colour}{(optional) A numeric vector used for colouring the timeline marker borders.}
+\item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.}
 
-\item{fill}{(optional) A numeric vector used for colouring the timeline marker bodies.}
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning.
+If \code{TRUE}, missing values are silently removed.}
 
-\item{size}{(optional) A numeric vector used for adjusting the size the timeline markers.}
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.}
 
-\item{alpha}{(optional) A numeric value indicating the marker's level of transparency.}
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather than combining with them.}
 
-\item{shape}{(optional) An integer code (0:25) for one of a set of graphics symbols.
-See \code{pch} at \code{?points}.}
+\item{...}{other arguments passed on to \code{layer}.
+These are often aesthetics, used to set an aesthetic to a fixed value.}
 }
 \value{
 A timeline plot with one point symbol for each date.
@@ -37,11 +40,7 @@ The function only returns reasonable results for CE (Common Era) dates,
 }
 \examples{
 # size and colour as figure 1 of module 2
-pckg <- getwd()
-file <- grep("earthquakes.tsv.gz",
-             list.files(path = pckg, all.files = TRUE, full.names = TRUE, recursive = TRUE),
-            value = TRUE)
-
+file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
 readr::read_delim(file = file, delim = "\\t") \%>\%
   eq_clean_data() \%>\%
   dplyr::filter(lubridate::year(DATE) \%in\% 2000:2017 & COUNTRY == "USA") \%>\%

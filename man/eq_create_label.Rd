@@ -18,11 +18,7 @@ This function creates HTML labels for pop-up windows in leaflet maps.
 }
 \examples{
 # html label pop-up as in figure 2 of module 3
-pckg <- getwd()
-file <- grep("earthquakes.tsv.gz",
-             list.files(path = pckg, all.files = TRUE, full.names = TRUE, recursive = TRUE),
-            value = TRUE)
-
+file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
 readr::read_delim(file = file, delim = "\\t") \%>\%
   eq_clean_data() \%>\%
   dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) \%>\%

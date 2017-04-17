@@ -27,11 +27,11 @@ eq_location_clean <- function(loc) {
 
 #' Clean data
 #'
-#' This function unites temporal information in a \code{DATE} column,
-#' converts the spatial coordinates (\code{LONGITUDE}, \code{LATITUDE}),
-#' the earthquake magnitude (\code{EQ_PRIMARY}),
-#' and the number of deaths (\code{TOTAL_DEATHS}) to numeric,
-#' cleans the \code{LOCATION_NAME} by using the \code{eq_location_clean} function,
+#' This function unites temporal information in a DATE column,
+#' converts the spatial coordinates (LONGITUDE, LATITUDE),
+#' the earthquake magnitude (EQ_PRIMARY),
+#' and the number of deaths (TOTAL_DEATHS) to numeric,
+#' cleans the LOCATION_NAME by using the \code{eq_location_clean} function,
 #' and discards several columns not needed for the analysis of earthquakes in this package.
 #'
 #' @param raw A data frame or tibble with the raw data.
@@ -66,6 +66,16 @@ eq_clean_data <- function(raw) {
 #' Geom for timelines
 #'
 #' \code{GeomTimeline} is a custom Geom for displaying timelines of earthquakes.
+#'
+#' @param x A vector of dates.
+#' @param y (optional) A factor indicating some stratification in which case
+#'   multiple time lines will be plotted for each level of the factor (e.g. country).
+#' @param colour (optional) A numeric vector used for colouring the timeline marker borders.
+#' @param fill (optional) A numeric vector used for colouring the timeline marker bodies.
+#' @param size (optional) A numeric vector used for adjusting the size the timeline markers.
+#' @param alpha (optional) A numeric value indicating the marker's level of transparency.
+#' @param shape (optional) An integer code (0:25) for one of a set of graphics symbols.
+#'   See \code{pch} at \code{?points}.
 #'
 #' @note This is an internal function that is not directly called by the user.
 #'
@@ -117,15 +127,20 @@ GeomTimeline <- ggproto("GeomTimeline", Geom,
 #'
 #' The \code{geom_timeline} function displays timelines of earthquakes based on the \code{GeomTimeline}.
 #'
-#' @param x A vector of dates.
-#' @param y (optional) A factor indicating some stratification in which case
-#'   multiple time lines will be plotted for each level of the factor (e.g. country).
-#' @param colour (optional) A numeric vector used for colouring the timeline marker borders.
-#' @param fill (optional) A numeric vector used for colouring the timeline marker bodies.
-#' @param size (optional) A numeric vector used for adjusting the size the timeline markers.
-#' @param alpha (optional) A numeric value indicating the marker's level of transparency.
-#' @param shape (optional) An integer code (0:25) for one of a set of graphics symbols.
-#'   See \code{pch} at \code{?points}.
+#' @param mapping Set of aesthetic mappings created by \code{aes} or \code{aes_}.
+#'   If specified and \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+#'   at the top level of the plot. You must supply mapping if there is no plot mapping.
+#' @param data The data to be displayed in this layer.
+#'   If \code{NULL], the default, the data is inherited from the plot data as specified in the call to \code{ggplot}.
+#' @param stat The statistical transformation to use on the data for this layer, as a string.
+#' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
+#' @param na.rm If \code{FALSE}, the default, missing values are removed with a warning.
+#'   If \code{TRUE}, missing values are silently removed.
+#' @param show.legend logical. Should this layer be included in the legends?
+#'   \code{NA}, the default, includes if any aesthetics are mapped.
+#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them.
+#' @param ... other arguments passed on to \code{layer}.
+#'   These are often aesthetics, used to set an aesthetic to a fixed value.
 #'
 #' @return A timeline plot with one point symbol for each date.
 #'
@@ -165,6 +180,15 @@ geom_timeline <- function(mapping = NULL, data = NULL, stat = "identity",
 #' Geom for timeline labels
 #'
 #' \code{GeomTimelineLabel} is a custom Geom for displaying timeline labels.
+#'
+#' @param x A vector of dates.
+#' @param label A character vector, e.g. the column \code{LOCATION_NAME}
+#' @param n_max (optional) An integer value indicating the maximum number of labels per timeline.
+#'   The \code{n_max} highest values of \code{col_max} will be selected.
+#' @param col_max (optional) The column based on which the \code{n_max} highest values will be selected.
+#' @param y (optional) A factor indicating some stratification in which case
+#'   multiple time lines will be plotted for each level of the factor (e.g. country).
+#' @param colour (optional) A colour used for colouring the vertical lines leading to the label.
 #'
 #' @note This is an internal function that is not directly called by the user.
 #'
@@ -218,14 +242,20 @@ GeomTimelineLabel <- ggproto("GeomTimelineLabel", Geom,
 #' The \code{geom_timeline_label} function displays timeline labels based on the \code{GeomTimelineLabel}.
 #' It is usually used together with the \code{geom_timeline} function.
 #'
-#' @param x A vector of dates.
-#' @param label A character vector, e.g. the column \code{LOCATION_NAME}
-#' @param n_max (optional) An integer value indicating the maximum number of labels per timeline.
-#'   The \code{n_max} highest values of \code{col_max} will be selected.
-#' @param col_max (optional) The column based on which the \code{n_max} highest values will be selected.
-#' @param y (optional) A factor indicating some stratification in which case
-#'   multiple time lines will be plotted for each level of the factor (e.g. country).
-#' @param colour (optional) A colour used for colouring the vertical lines leading to the label.
+#' @param mapping Set of aesthetic mappings created by \code{aes} or \code{aes_}.
+#'   If specified and \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+#'   at the top level of the plot. You must supply mapping if there is no plot mapping.
+#' @param data The data to be displayed in this layer.
+#'   If \code{NULL], the default, the data is inherited from the plot data as specified in the call to \code{ggplot}.
+#' @param stat The statistical transformation to use on the data for this layer, as a string.
+#' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
+#' @param na.rm If \code{FALSE}, the default, missing values are removed with a warning.
+#'   If \code{TRUE}, missing values are silently removed.
+#' @param show.legend logical. Should this layer be included in the legends?
+#'   \code{NA}, the default, includes if any aesthetics are mapped.
+#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather than combining with them.
+#' @param ... other arguments passed on to \code{layer}.
+#'   These are often aesthetics, used to set an aesthetic to a fixed value.
 #'
 #' @return Timeline labels are added to a timeline plot.
 #'
@@ -243,7 +273,8 @@ GeomTimelineLabel <- ggproto("GeomTimelineLabel", Geom,
 #'   geom_timeline_label(aes(label = LOCATION_NAME, col_max = EQ_PRIMARY), n_max = 5) +
 #'   theme_classic() +
 #'   theme(legend.position = "bottom",
-#'         axis.title.y = element_blank(), axis.ticks.y = element_blank(), axis.line.y = element_blank()) +
+#'         axis.title.y = element_blank(), axis.ticks.y = element_blank(),
+#'         axis.line.y = element_blank()) +
 #'   scale_fill_continuous(name = "# deaths", breaks = c(1, 87652))
 #'
 #' @export
@@ -288,7 +319,7 @@ eq_map <- function(data, annot_col = "DATE") {
   leaflet::leaflet(data) %>%
     leaflet::addTiles() %>%  # Add default OpenStreetMap map tiles
     leaflet::addCircleMarkers(lng = ~LONGITUDE, lat = ~LATITUDE,
-                              popup = as.formula(paste0("~", annot_col)),
+                              popup = stats::as.formula(paste0("~", annot_col)),
                               radius = ~EQ_PRIMARY,
                               weight = 1 # stroke / border width
                               )
