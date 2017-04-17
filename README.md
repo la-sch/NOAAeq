@@ -33,3 +33,5 @@ data %>%
 ```
 
 ![](README-timeline1-1.png)
+
+[![Travis-CI Build Status](https://travis-ci.org/la-sch/NOAAeq.svg?branch=master)](https://travis-ci.org/la-sch/NOAAeq)

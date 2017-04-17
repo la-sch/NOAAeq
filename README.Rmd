@@ -53,3 +53,5 @@ data %>%
  guides(size = guide_legend(order = 1),
         fill = guide_colourbar(order = 2))
 ```
+
+[![Travis-CI Build Status](https://travis-ci.org/la-sch/NOAAeq.svg?branch=master)](https://travis-ci.org/la-sch/NOAAeq)
