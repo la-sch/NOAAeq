@@ -15,6 +15,7 @@ Suggests: knitr,
     rmarkdown,
     testthat,
     readr,
-    dplyr
+    dplyr,
+    tidyr
 VignetteBuilder: knitr
 Imports: magrittr
