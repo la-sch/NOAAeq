@@ -24,6 +24,7 @@ This function creates an interactive leaflet map with the earthquake locations.
 \examples{
 # date pop-up as in figure 1 of module 3
 file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+library(magrittr)
 readr::read_delim(file = file, delim = "\\t") \%>\%
   eq_clean_data() \%>\%
   dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) \%>\%

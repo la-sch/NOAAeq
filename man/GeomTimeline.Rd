@@ -8,23 +8,6 @@
 \usage{
 GeomTimeline
 }
-\arguments{
-\item{x}{A vector of dates.}
-
-\item{y}{(optional) A factor indicating some stratification in which case
-multiple time lines will be plotted for each level of the factor (e.g. country).}
-
-\item{colour}{(optional) A numeric vector used for colouring the timeline marker borders.}
-
-\item{fill}{(optional) A numeric vector used for colouring the timeline marker bodies.}
-
-\item{size}{(optional) A numeric vector used for adjusting the size the timeline markers.}
-
-\item{alpha}{(optional) A numeric value indicating the marker's level of transparency.}
-
-\item{shape}{(optional) An integer code (0:25) for one of a set of graphics symbols.
-See \code{pch} at \code{?points}.}
-}
 \value{
 A Geom object that is used within the \code{geom_timeline} function.
 }
@@ -33,5 +16,17 @@ A Geom object that is used within the \code{geom_timeline} function.
 }
 \note{
 This is an internal function that is not directly called by the user.
+  The aesthetics are as follows:
+\itemize{
+\item x: A vector of dates.
+\item y (optional): A factor indicating some stratification in which case
+  multiple time lines will be plotted for each level of the factor (e.g. country).
+\item colour (optional): A numeric vector used for colouring the timeline marker borders.
+\item fill (optional): A numeric vector used for colouring the timeline marker bodies.
+\item size (optional): A numeric vector used for adjusting the size the timeline markers.
+\item alpha (optional): A numeric value indicating the marker's level of transparency.
+\item shape (optional): An integer code (0:25) for one of a set of graphics symbols.
+  See \code{pch} at \code{?points}.
+}
 }
 \keyword{datasets}

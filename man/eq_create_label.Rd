@@ -19,6 +19,7 @@ This function creates HTML labels for pop-up windows in leaflet maps.
 \examples{
 # html label pop-up as in figure 2 of module 3
 file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+library(magrittr)
 readr::read_delim(file = file, delim = "\\t") \%>\%
   eq_clean_data() \%>\%
   dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) \%>\%

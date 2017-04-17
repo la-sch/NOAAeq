@@ -13,6 +13,9 @@ geom_timeline_label(mapping = NULL, data = NULL, stat = "identity",
 If specified and \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
 at the top level of the plot. You must supply mapping if there is no plot mapping.}
 
+\item{data}{The data to be displayed in this layer.
+If \code{NULL}, the default, the data is inherited from the plot data as specified in the call to \code{ggplot}.}
+
 \item{stat}{The statistical transformation to use on the data for this layer, as a string.}
 
 \item{position}{Position adjustment, either as a string, or the result of a call to a position adjustment function.}
@@ -38,6 +41,7 @@ It is usually used together with the \code{geom_timeline} function.
 \examples{
 # stratification and text annotations as in figure 3 of module 2
 file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+library(magrittr)
 readr::read_delim(file = file, delim = "\\t") \%>\%
   eq_clean_data() \%>\%
   dplyr::filter(lubridate::year(DATE) \%in\% 2000:2017 & COUNTRY \%in\% c("USA", "CHINA")) \%>\%

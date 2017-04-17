@@ -8,21 +8,6 @@
 \usage{
 GeomTimelineLabel
 }
-\arguments{
-\item{x}{A vector of dates.}
-
-\item{label}{A character vector, e.g. the column \code{LOCATION_NAME}}
-
-\item{n_max}{(optional) An integer value indicating the maximum number of labels per timeline.
-The \code{n_max} highest values of \code{col_max} will be selected.}
-
-\item{col_max}{(optional) The column based on which the \code{n_max} highest values will be selected.}
-
-\item{y}{(optional) A factor indicating some stratification in which case
-multiple time lines will be plotted for each level of the factor (e.g. country).}
-
-\item{colour}{(optional) A colour used for colouring the vertical lines leading to the label.}
-}
 \value{
 A Geom object that is used within the \code{geom_timeline_label} function.
 }
@@ -31,5 +16,16 @@ A Geom object that is used within the \code{geom_timeline_label} function.
 }
 \note{
 This is an internal function that is not directly called by the user.
+  The aesthetics are as follows:
+\itemize{
+\item x: A vector of dates.
+\item label: A character vector, e.g. the column \code{LOCATION_NAME}
+\item n_max (optional): An integer value indicating the maximum number of labels per timeline.
+  The \code{n_max} highest values of \code{col_max} will be selected.
+\item col_max (optional): The column based on which the \code{n_max} highest values will be selected.
+\item y (optional): A factor indicating some stratification in which case
+  multiple time lines will be plotted for each level of the factor (e.g. country).
+\item colour (optional): A colour used for colouring the vertical lines leading to the label.
+}
 }
 \keyword{datasets}

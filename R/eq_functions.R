@@ -43,22 +43,22 @@ eq_location_clean <- function(loc) {
 #'
 #' @examples
 #' file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
-#' readr::read_delim(file = file, delim = "\t") %>%
-#'   eq_clean_data()
+#' data <- readr::read_delim(file = file, delim = "\t")
+#' eq_clean_data(data)
 #'
 #' @export
 eq_clean_data <- function(raw) {
   raw %>%
-    dplyr::mutate(CE = as.factor(ifelse(YEAR >= 0, "CE", "BCE")),
-                  YEAR = ifelse(YEAR > 2017, NA, sprintf("%04d", abs(YEAR)))) %>%
-    tidyr::unite(DATE, YEAR, MONTH, DAY, sep = "-") %>%
-    dplyr::mutate(DATE = lubridate::ymd(DATE, truncated = 2),
-                  LONGITUDE = as.numeric(LONGITUDE),
-                  LATITUDE = as.numeric(LATITUDE),
-                  LOCATION_NAME = eq_location_clean(LOCATION_NAME),
-                  EQ_PRIMARY = as.numeric(EQ_PRIMARY),
-                  TOTAL_DEATHS = as.numeric(TOTAL_DEATHS)) %>%
-    dplyr::select(DATE, CE, LONGITUDE, LATITUDE, COUNTRY, LOCATION_NAME, EQ_PRIMARY, TOTAL_DEATHS)
+    dplyr::mutate_(CE = ~as.factor(ifelse(YEAR >= 0, "CE", "BCE")),
+                  YEAR = ~ifelse(YEAR > 2017, NA, sprintf("%04d", abs(YEAR)))) %>%
+    tidyr::unite_("DATE", c("YEAR", "MONTH", "DAY"), sep = "-") %>%
+    dplyr::mutate_(DATE = ~lubridate::ymd(DATE, truncated = 2),
+                  LONGITUDE = ~as.numeric(LONGITUDE),
+                  LATITUDE = ~as.numeric(LATITUDE),
+                  LOCATION_NAME = ~eq_location_clean(LOCATION_NAME),
+                  EQ_PRIMARY = ~as.numeric(EQ_PRIMARY),
+                  TOTAL_DEATHS = ~as.numeric(TOTAL_DEATHS)) %>%
+    dplyr::select_(~DATE, ~CE, ~LONGITUDE, ~LATITUDE, ~COUNTRY, ~LOCATION_NAME, ~EQ_PRIMARY, ~TOTAL_DEATHS)
 }
 
 # module 2 ====
@@ -67,17 +67,19 @@ eq_clean_data <- function(raw) {
 #'
 #' \code{GeomTimeline} is a custom Geom for displaying timelines of earthquakes.
 #'
-#' @param x A vector of dates.
-#' @param y (optional) A factor indicating some stratification in which case
-#'   multiple time lines will be plotted for each level of the factor (e.g. country).
-#' @param colour (optional) A numeric vector used for colouring the timeline marker borders.
-#' @param fill (optional) A numeric vector used for colouring the timeline marker bodies.
-#' @param size (optional) A numeric vector used for adjusting the size the timeline markers.
-#' @param alpha (optional) A numeric value indicating the marker's level of transparency.
-#' @param shape (optional) An integer code (0:25) for one of a set of graphics symbols.
-#'   See \code{pch} at \code{?points}.
-#'
 #' @note This is an internal function that is not directly called by the user.
+#'   The aesthetics are as follows:
+#' \itemize{
+#' \item x: A vector of dates.
+#' \item y (optional): A factor indicating some stratification in which case
+#'   multiple time lines will be plotted for each level of the factor (e.g. country).
+#' \item colour (optional): A numeric vector used for colouring the timeline marker borders.
+#' \item fill (optional): A numeric vector used for colouring the timeline marker bodies.
+#' \item size (optional): A numeric vector used for adjusting the size the timeline markers.
+#' \item alpha (optional): A numeric value indicating the marker's level of transparency.
+#' \item shape (optional): An integer code (0:25) for one of a set of graphics symbols.
+#'   See \code{pch} at \code{?points}.
+#' }
 #'
 #' @return A Geom object that is used within the \code{geom_timeline} function.
 #'
@@ -131,7 +133,7 @@ GeomTimeline <- ggproto("GeomTimeline", Geom,
 #'   If specified and \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
 #'   at the top level of the plot. You must supply mapping if there is no plot mapping.
 #' @param data The data to be displayed in this layer.
-#'   If \code{NULL], the default, the data is inherited from the plot data as specified in the call to \code{ggplot}.
+#'   If \code{NULL}, the default, the data is inherited from the plot data as specified in the call to \code{ggplot}.
 #' @param stat The statistical transformation to use on the data for this layer, as a string.
 #' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
 #' @param na.rm If \code{FALSE}, the default, missing values are removed with a warning.
@@ -153,6 +155,7 @@ GeomTimeline <- ggproto("GeomTimeline", Geom,
 #' @examples
 #' # size and colour as figure 1 of module 2
 #' file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+#' library(magrittr)
 #' readr::read_delim(file = file, delim = "\t") %>%
 #'   eq_clean_data() %>%
 #'   dplyr::filter(lubridate::year(DATE) %in% 2000:2017 & COUNTRY == "USA") %>%
@@ -181,16 +184,18 @@ geom_timeline <- function(mapping = NULL, data = NULL, stat = "identity",
 #'
 #' \code{GeomTimelineLabel} is a custom Geom for displaying timeline labels.
 #'
-#' @param x A vector of dates.
-#' @param label A character vector, e.g. the column \code{LOCATION_NAME}
-#' @param n_max (optional) An integer value indicating the maximum number of labels per timeline.
-#'   The \code{n_max} highest values of \code{col_max} will be selected.
-#' @param col_max (optional) The column based on which the \code{n_max} highest values will be selected.
-#' @param y (optional) A factor indicating some stratification in which case
-#'   multiple time lines will be plotted for each level of the factor (e.g. country).
-#' @param colour (optional) A colour used for colouring the vertical lines leading to the label.
-#'
 #' @note This is an internal function that is not directly called by the user.
+#'   The aesthetics are as follows:
+#' \itemize{
+#' \item x: A vector of dates.
+#' \item label: A character vector, e.g. the column \code{LOCATION_NAME}
+#' \item n_max (optional): An integer value indicating the maximum number of labels per timeline.
+#'   The \code{n_max} highest values of \code{col_max} will be selected.
+#' \item col_max (optional): The column based on which the \code{n_max} highest values will be selected.
+#' \item y (optional): A factor indicating some stratification in which case
+#'   multiple time lines will be plotted for each level of the factor (e.g. country).
+#' \item colour (optional): A colour used for colouring the vertical lines leading to the label.
+#' }
 #'
 #' @return A Geom object that is used within the \code{geom_timeline_label} function.
 #'
@@ -246,7 +251,7 @@ GeomTimelineLabel <- ggproto("GeomTimelineLabel", Geom,
 #'   If specified and \code{inherit.aes = TRUE} (the default), it is combined with the default mapping
 #'   at the top level of the plot. You must supply mapping if there is no plot mapping.
 #' @param data The data to be displayed in this layer.
-#'   If \code{NULL], the default, the data is inherited from the plot data as specified in the call to \code{ggplot}.
+#'   If \code{NULL}, the default, the data is inherited from the plot data as specified in the call to \code{ggplot}.
 #' @param stat The statistical transformation to use on the data for this layer, as a string.
 #' @param position Position adjustment, either as a string, or the result of a call to a position adjustment function.
 #' @param na.rm If \code{FALSE}, the default, missing values are removed with a warning.
@@ -265,6 +270,7 @@ GeomTimelineLabel <- ggproto("GeomTimelineLabel", Geom,
 #' @examples
 #' # stratification and text annotations as in figure 3 of module 2
 #' file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+#' library(magrittr)
 #' readr::read_delim(file = file, delim = "\t") %>%
 #'   eq_clean_data() %>%
 #'   dplyr::filter(lubridate::year(DATE) %in% 2000:2017 & COUNTRY %in% c("USA", "CHINA")) %>%
@@ -309,6 +315,7 @@ geom_timeline_label <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @examples
 #' # date pop-up as in figure 1 of module 3
 #' file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+#' library(magrittr)
 #' readr::read_delim(file = file, delim = "\t") %>%
 #'   eq_clean_data() %>%
 #'   dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>%
@@ -337,6 +344,7 @@ eq_map <- function(data, annot_col = "DATE") {
 #' @examples
 #' # html label pop-up as in figure 2 of module 3
 #' file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+#' library(magrittr)
 #' readr::read_delim(file = file, delim = "\t") %>%
 #'   eq_clean_data() %>%
 #'   dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) %>%

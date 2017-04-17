@@ -23,7 +23,7 @@ and discards several columns not needed for the analysis of earthquakes in this 
 }
 \examples{
 file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
-readr::read_delim(file = file, delim = "\\t") \%>\%
-  eq_clean_data()
+data <- readr::read_delim(file = file, delim = "\\t")
+eq_clean_data(data)
 
 }
