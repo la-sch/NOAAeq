@@ -14,8 +14,11 @@ RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown,
     testthat,
-    readr,
-    dplyr,
-    tidyr
+    readr
 VignetteBuilder: knitr
-Imports: magrittr
+Imports: magrittr,
+    dplyr,
+    tidyr,
+    stringr,
+    lubridate,
+    leaflet
