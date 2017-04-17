@@ -15,6 +15,7 @@ The `NOAAeq` package analyses data from the [Significant Earthquake Database](ht
 require("knitr")
 require("NOAAeq")
 require("magrittr")
+require("readr")
 opts_knit$set(root.dir = system.file("extdata", package = "NOAAeq"))
 ```
 
