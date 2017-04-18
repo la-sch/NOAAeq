@@ -3,6 +3,8 @@
 Introduction to NOAAeq
 ======================
 
+[![Travis-CI Build Status](https://travis-ci.org/la-sch/NOAAeq.svg?branch=master)](https://travis-ci.org/la-sch/NOAAeq)
+
 The `NOAAeq` package analyses data from the [Significant Earthquake Database](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1) of the U.S. National Oceanographic and Atmospheric Administration (NOAA). This dataset contains information about 5,933 earthquakes over an approximately 4,000 year time span.
 
 The package has 3 main functionalities:
@@ -33,5 +35,3 @@ data %>%
 ```
 
 ![](README-timeline1-1.png)
-
-[![Travis-CI Build Status](https://travis-ci.org/la-sch/NOAAeq.svg?branch=master)](https://travis-ci.org/la-sch/NOAAeq)
