@@ -86,6 +86,22 @@ eq_clean_data <- function(raw) {
 #' @import ggplot2
 #' @importFrom magrittr "%>%"
 #'
+#' @examples
+#' # size and colour as figure 1 of module 2
+#' file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+#' library(magrittr)
+#' readr::read_delim(file = file, delim = "\t") %>%
+#'   eq_clean_data() %>%
+#'   dplyr::filter(lubridate::year(DATE) %in% 2000:2017 & COUNTRY == "USA") %>%
+#'   ggplot(aes(x = DATE, size = EQ_PRIMARY, fill = TOTAL_DEATHS)) +
+#'   geom_timeline() +
+#'   theme_classic() +
+#'   theme(legend.position = "bottom") +
+#'   scale_size_continuous(name = "Richter scale value") +
+#'   scale_fill_continuous(name = "# deaths") +
+#'   guides(size = guide_legend(order = 1),
+#'          fill = guide_colourbar(order = 2))
+#'
 #' @export
 GeomTimeline <- ggproto("GeomTimeline", Geom,
                         required_aes = c("x"),
@@ -201,6 +217,22 @@ geom_timeline <- function(mapping = NULL, data = NULL, stat = "identity",
 #'
 #' @import ggplot2
 #' @importFrom magrittr "%>%"
+#'
+#' @examples
+#' # stratification and text annotations as in figure 3 of module 2
+#' file <- system.file("extdata", "earthquakes.tsv.gz", package = "NOAAeq")
+#' library(magrittr)
+#' readr::read_delim(file = file, delim = "\t") %>%
+#'   eq_clean_data() %>%
+#'   dplyr::filter(lubridate::year(DATE) %in% 2000:2017 & COUNTRY %in% c("USA", "CHINA")) %>%
+#'   ggplot(aes(x = DATE, y = COUNTRY, fill = TOTAL_DEATHS)) +
+#'   geom_timeline() +
+#'   geom_timeline_label(aes(label = LOCATION_NAME, col_max = EQ_PRIMARY), n_max = 5) +
+#'   theme_classic() +
+#'   theme(legend.position = "bottom",
+#'         axis.title.y = element_blank(), axis.ticks.y = element_blank(),
+#'         axis.line.y = element_blank()) +
+#'   scale_fill_continuous(name = "# deaths", breaks = c(1, 87652))
 #'
 #' @export
 GeomTimelineLabel <- ggproto("GeomTimelineLabel", Geom,
